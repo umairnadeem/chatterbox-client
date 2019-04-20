@@ -8,9 +8,17 @@ var FormView = {
 
   handleSubmit: function(event) {
     // Stop the browser from submitting the form
+    var message = $( '#message' ).val();
+    var name = window.location.search.match(/(username=)(\w+)/i)[2];
+    var formattedMessage = {
+      roomname: RoomsView.$select.val(),
+      text: message,
+      username: name 
+    };
+  
     event.preventDefault();
-    
-    console.log('click!');
+    MessagesView.renderMessage(message);
+    Parse.create((formattedMessage) => formattedMessage);
   },
 
   setStatus: function(active) {
