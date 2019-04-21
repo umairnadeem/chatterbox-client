@@ -9,7 +9,9 @@ var App = {
 
     FormView.initialize();
     RoomsView.initialize();
+    Rooms.initialize();
     MessagesView.initialize();
+    Friends.toggleStatus();
 
     // Fetch initial batch of messages
     App.startSpinner();
@@ -17,12 +19,19 @@ var App = {
   },
 
   fetch: function(callback = ()=>{}) {
-    return Parse.readAll((data) => {
+    Parse.readAll((data) => {
       // examine the response from the server request:
       console.log(data);
 
       callback();
-      return data;
+      Messages.results = data.results;
+      Rooms.results = _.uniq(data.results.map(elem => {
+        if (elem.roomname) {
+          return elem.roomname;
+        }
+      }));
+      RoomsView.render();
+      MessagesView.render(RoomsView.$room);
     });
   },
 

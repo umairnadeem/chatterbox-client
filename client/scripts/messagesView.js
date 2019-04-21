@@ -3,27 +3,33 @@ var MessagesView = {
   $chats: $('#chats'),
 
   initialize: function() {
-    // MessagesView.render();
+   
   },
 
-  render: function() {
-    $.getJSON('http://parse.sfo.hackreactor.com/chatterbox/classes/messages', function (message) {
-      var i, html = '';
-      console.log(message.results.length);
-      for (i = 0; i < message.results.length; i++) {
-        if (message.results[i].username) {
-          html += MessageView.render(message.results[i]);
+  render: function(room) {
+    $('#chats').empty();
+    var i, html = '';
+    console.log(Messages.results);
+    for (i = 0; i < Messages.results.length; i++) {
+      if (Messages.results[i].username) {
+        if (room) {
+          if (Messages.results[i].roomname === room) {
+            html += MessageView.render(Messages.results[i]);
+          }
+        }
+        else {
+          html += MessageView.render(Messages.results[i])
         }
       }
-      console.log(html);
-      $('#chats').append(html);
-    });
+    }
+    $('#chats').append(html);
+
   },
 
   renderMessage: function(message) {
-    var name = window.location.search.match(/(username=)(\w+)/i)[2];
+    var name = App.username;
     $('#chats').prepend(`<div class="chat">
-    <div class="username"> ${name} </div>
+    <div class="username"> <a href= "#" >${name}</a> </div>
     <div> ${message} </div>
     </div>`);
   }

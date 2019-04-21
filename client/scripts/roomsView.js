@@ -2,34 +2,21 @@ var RoomsView = {
 
   $button: $('#rooms button'),
   $select: $('#rooms select'),
-
+  $room: $('#rooms select option:selected').val(),
   initialize: function() {
-    RoomsView.render();
-    RoomsView.$button.on('click', function() {
-    RoomsView.renderRoom();
-    })
+    RoomsView.$select.on('change', function() {
+      RoomsView.$room = $('#rooms select option:selected').val();
+      console.log(RoomsView.$room);
+      MessagesView.render(RoomsView.$room);
+    });
   },
 
   render: function() {
-    $.getJSON('http://parse.sfo.hackreactor.com/chatterbox/classes/messages', function (message) {
-      var i, room = '';
-      for (i = 0; i < message.results.length; i++) {
-        if (message.results[i].roomname) {
-          room = message.results[i].roomname;
-          RoomsView.$select.append(`<option> ${room} </option>`);
-        }
-      }
-    });
-
-    
-
+    Rooms.results.forEach(Rooms.add)
   },
-
-  renderRoom: function(room) {
-    room = room ? room : prompt("Enter room name", "");
-    if (room) {
-      RoomsView.$select.prepend(`<option> ${room} </option>`).val(room);
-    }
+  renderRoom: function (room) {
+    room = room ? room : null;
+    Rooms.add(room);
   }
 
 };
